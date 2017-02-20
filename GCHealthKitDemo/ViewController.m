@@ -122,6 +122,7 @@
                         HKQuantitySample *sample = results[i];
                         double tmp = [sample.quantity doubleValueForUnit: [HKUnit countUnit]];
                         count += tmp;
+//                        NSLog(@"sourceRevision:%@", sample.sourceRevision);
 //                         NSLog(@"%@ ~ %@ stepCount: %g", sample.startDate, sample.endDate, count);
 //                        NSInteger isUserAdded = [[sample.metadata objectForKey: @"HKWasUserEntered"] integerValue];
 //                        if (1 == isUserAdded) {

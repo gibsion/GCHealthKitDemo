@@ -30,6 +30,10 @@
 }
 
 -(void)requestAuthorized:(void (^)(BOOL success, NSError * _Nullable error))completion {
+    if(!(NSClassFromString(@"HKHealthStore") && [HKHealthStore isHealthDataAvailable])){
+        return;
+    }
+    
     HKObjectType *objHeightType = [HKObjectType quantityTypeForIdentifier: HKQuantityTypeIdentifierHeight];
     HKObjectType *objBodyMassType = [HKObjectType quantityTypeForIdentifier: HKQuantityTypeIdentifierBodyMass];
     HKObjectType *objStepCountType = [HKObjectType quantityTypeForIdentifier: HKQuantityTypeIdentifierStepCount];
@@ -160,13 +164,14 @@
     HKQuantity *distanceQuantity = [HKQuantity quantityWithUnit: unit doubleValue: distance];
     NSString *strName = [[UIDevice currentDevice] name];
     NSString *strModel = [[UIDevice currentDevice] model];
+    NSString *localizedModel = [[UIDevice currentDevice] localizedModel];
     NSString *strSysVersion = [[UIDevice currentDevice] systemVersion];
     NSString *localeIdentifier = [[NSLocale currentLocale] localeIdentifier];
     
-    HKDevice *device = [[HKDevice alloc] initWithName:strName manufacturer:@"Apple" model:strModel hardwareVersion:strModel firmwareVersion:strModel softwareVersion:strSysVersion localIdentifier:localeIdentifier UDIDeviceIdentifier:localeIdentifier];
-    NSLog(@"device:%@",device);
-    
-    HKQuantitySample *sample = [HKQuantitySample quantitySampleWithType: quantityType quantity: distanceQuantity startDate: startDate endDate: endDate device: device metadata: [NSDictionary dictionaryWithObject: @(0) forKey: @"HKWasUserEntered"]];
+    HKDevice *device = [[HKDevice alloc] initWithName:strName manufacturer:@"Apple" model:strModel hardwareVersion:localizedModel firmwareVersion:strModel softwareVersion:strSysVersion localIdentifier:localeIdentifier UDIDeviceIdentifier:localeIdentifier];
+//    NSLog(@"device:%@",device);
+    NSDictionary *metaData = nil;//[NSDictionary dictionaryWithObject: @(0) forKey: @"HKWasUserEntered"];
+    HKQuantitySample *sample = [HKQuantitySample quantitySampleWithType: quantityType quantity: distanceQuantity startDate: startDate endDate: endDate device: device metadata: metaData];
     
     return sample;
 }
